@@ -26,6 +26,17 @@ app.post('/addUser', async (req, res) => {
   }
 });
 
+app.post('/addFriendUser', async (req, res) => {
+  console.log("req.body", req.body)
+  const createUser = new User(req.body);
+  try {
+    await createUser.find({});
+    res.send(createUser);
+  } catch (err) {
+    res.status(500).send(err);
+  }
+});
+
 app.listen(port, (req, res)=>{
   console.log(` Server starts on ${port}`)
 })
