@@ -6,7 +6,6 @@ const bodyParser = require('body-parser');
 
 // get all Users
 router.get('/getUser', async (req, res) => {
-  console.log('hey')
   try {
     const users = await User.find({})
     res.status(500).send(users)
@@ -19,7 +18,6 @@ router.get('/getUser', async (req, res) => {
 // Find user by name
 router.get('/getUser/:name', async (req, res) => {
   const name = req.params.name;
-  console.log(name)
   try {
     const users = await User.findOne({ 'name': name })
     if (!users) {
@@ -29,30 +27,6 @@ router.get('/getUser/:name', async (req, res) => {
   } catch (e) {
     res.status(500).send()
   }
-});
-
-// vadharanu
-router.post('/addfriendUser/:name', async (req, res) => {
-  console.log(req.body)
-  const asfriend = req.params.name;
-  console.log(asfriend)
-  const createUser = new User(req.body);
-  try {
-    await createUser.save()
-    await User.findOneAndUpdate({
-      email: req.body.email
-    }, {
-      frdId: createUser._id
-    }, {
-      new: true
-    });
-    console.log("TCL: createUser", createUser)
-    res.send(createUser)
-  } catch (e) {
-    res.status(400).send(e)
-  }
-console.log("req.body", req.body)
-
 });
 
 // create an user

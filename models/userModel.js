@@ -41,14 +41,10 @@ const userSchema = new mongoose.Schema({
       }
     }
   },
-  mobilenumber: {
+  mobilenumber: { 
     type: String,
     required: true,
-  },
-  frdId: [{
-    type: mongoose.Schema.Types.ObjectID,
-    ref: 'User'
-  }]
+  }
 });
 
 userSchema.plugin(uniqueValidator);

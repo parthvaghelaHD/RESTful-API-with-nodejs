@@ -17,23 +17,11 @@ const user2Schema = new mongoose.Schema({
   },
   email: {
     type: String,
-    unique: true,
-    lowercase: true,
-    index: true,  
-    trim: true,
-    required: true,
-    validator(value){
-      if(!validator.isEmail(value)){
-        throw new Error(' invalid email ')
-      }
-    }
-  },
-  frdId: [{
-    type: mongoose.Schema.Types.ObjectID,
-    ref: 'User'
-  }]
-});
+  }
+},
+  { 
+    versionKey: false });
 
-userSchema.plugin(uniqueValidator);
-const User2 = mongoose.model('User2', user2Schema);
+user2Schema.plugin(uniqueValidator);
+const User2 = mongoose.model('User', userSchema);
 module.exports = User2;
