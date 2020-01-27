@@ -3,40 +3,38 @@ const app = express();
 const mongoose = require('mongoose');
 const User = require('./models/userModel');
 const bodyParser = require('body-parser');
+const validator = require('validator')
+const userRouter = require('./router/router')
 const port = process.env.PORT || 3000;
 
-
-const mongodb = 'mongodb://localhost:27017/Userdatabase'
+app.use(bodyParser.urlencoded({extended:true}))
 app.use(express.json());
+app.use('/', userRouter)
+const mongodb = 'mongodb://localhost:27017/Userdatabase'
 
-mongoose.connect(mongodb, { useNewUrlParser: true, useUnifiedTopology: true}, (err, res)=>{
-  if(!err) {
-    console.log("We are connected");
-  }
-});
+/*
+1. Create user
+2. Add another user as friend
+3. Remove a user as fried from friend list
+4. List all the friend for a specific user
+5. Count of friends of specific friend in friend list
+ */
 
-app.post('/addUser', async (req, res) => {
-  console.log("req.body", req.body)
-  const createUser = new User(req.body);
-  try {
-    await createUser.save();
-    res.send(createUser);
-  } catch (err) {
-    res.status(500).send(err);
-  }
-});
+//  app.post('/frn')
 
-app.post('/addFriendUser', async (req, res) => {
-  console.log("req.body", req.body)
-  const createUser = new User(req.body);
-  try {
-    await createUser.find({});
-    res.send(createUser);
-  } catch (err) {
-    res.status(500).send(err);
-  }
-});
+mongoose.connect(mongodb, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  useCreateIndex: true,
+  useFindAndModify: false
+},
+  (err, res) => {
+    if (!err) {
+      console.log("We are connected");
+    }
+  });
 
-app.listen(port, (req, res)=>{
+// for listening on port
+app.listen(port, (req, res) => {
   console.log(` Server starts on ${port}`)
 })

@@ -3,7 +3,7 @@ const validator = require('validator')
 var uniqueValidator = require('mongoose-unique-validator');
 const bcrypt = require("bcryptjs");
 
-const userSchema = new mongoose.Schema({
+const user2Schema = new mongoose.Schema({
   id: {
     type: String,
     required: true,
@@ -27,23 +27,6 @@ const userSchema = new mongoose.Schema({
         throw new Error(' invalid email ')
       }
     }
-
-  },
-  password: {
-    type: String,
-    required: true,
-    trim: true,
-    lowercase: true,
-    minlength: 7,
-    validator(value){
-      if(value.toLowerCase().includes('password')){
-        throw new Error('password not contain "password" ')
-      }
-    }
-  },
-  mobilenumber: {
-    type: String,
-    required: true,
   },
   frdId: [{
     type: mongoose.Schema.Types.ObjectID,
@@ -52,5 +35,5 @@ const userSchema = new mongoose.Schema({
 });
 
 userSchema.plugin(uniqueValidator);
-const User = mongoose.model('User', userSchema);
-module.exports = User;
+const User2 = mongoose.model('User2', user2Schema);
+module.exports = User2;
