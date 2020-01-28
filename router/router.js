@@ -1,23 +1,15 @@
 const express = require('express');
 const User = require('../models/userModel')
+const friendUser = require('../models/friend');
 const router = express.Router()
 const bcrypt = require("bcryptjs");
 const bodyParser = require('body-parser');
-
-// get all Users
-router.get('/getUser', async (req, res) => {
-  try {
-    const users = await User.find({})
-    res.status(500).send(users)
-  } catch (e) {
-    res.send(e)
-  }
-
-});
+// const {userController} = require('../controller')
 
 // Find user by name
 router.get('/getUser/:name', async (req, res) => {
   const name = req.params.name;
+  console.log(name)
   try {
     const users = await User.findOne({ 'name': name })
     if (!users) {
@@ -26,6 +18,62 @@ router.get('/getUser/:name', async (req, res) => {
     res.send(users)
   } catch (e) {
     res.status(500).send()
+  }
+});
+
+// addfriendUser
+router.post('/addFriend/:id', async (req, res) => {
+  const userId = req.body.userId;
+  const friendId = req.params.id;
+  const friendObject = {
+    userId, friendId
+  }
+  const frienduser = new friendUser(friendObject);
+  try {
+    const foundAsfriend = await friendUser.findOne({ friendId });
+    if (foundAsfriend)
+      return res.status(500).json({
+        message: 'Already as friend'
+      })
+    frienduser.save().then(data => {
+      res.status(201).json({
+        data
+      })
+    })
+
+  } catch (e) {
+    res.status(400).send(e)
+  }
+});
+
+
+router.get('/getAllMyFriends/:id', async (req, res) => {
+  const userId = req.params.id;
+  try {
+    const allFriends = await friendUser.find({ userId: userId }).exec();
+    let fArray = allFriends.map(id => id.friendId);
+    const data = await User.find({ _id: { $in: fArray } })
+    res.status(201).json({
+      data: data.map(user => user.name),
+      friends_count: allFriends.length
+    })
+  } catch (e) {
+    res.status(400).send(e)
+  }
+});
+
+
+router.delete('/deleteFriendById/:friendId', async (req, res) => {
+  const userId = req.params.friendId;
+  try {
+    const allFriends = await friendUser.deleteOne({ friendId: userId }).exec();
+    console.log(allFriends)
+    res.status(201).json({
+      //  data : allFriends,
+      friends_count: allFriends.length
+    })
+  } catch (e) {
+    res.status(400).send(e)
   }
 });
 
@@ -39,13 +87,9 @@ router.post('/addUser', async (req, res) => {
       throw err
     } else {
       bcrypt.hash(password, salt, function (err, hash) {
-        if (err) {
+        if (err)
           throw err
-        } else {
-          console.log(hash)
-          console.log(hash)
-          //$2a$10$FEBywZh8u9M0Cec/0mWep.1kXrwKeiWDba6tdKvDfEBjyePJnDT7K
-
+        else {
           req.body.password = hash;
           const createUser = new User(req.body);
           try {

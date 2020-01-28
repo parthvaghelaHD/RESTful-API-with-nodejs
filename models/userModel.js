@@ -4,10 +4,6 @@ var uniqueValidator = require('mongoose-unique-validator');
 const bcrypt = require("bcryptjs");
 
 const userSchema = new mongoose.Schema({
-  id: {
-    type: String,
-    required: true,
-  },
   name: {
     type: String,
     trim: true,
@@ -44,7 +40,7 @@ const userSchema = new mongoose.Schema({
   mobilenumber: { 
     type: String,
     required: true,
-  }
+  },
 });
 
 userSchema.plugin(uniqueValidator);
