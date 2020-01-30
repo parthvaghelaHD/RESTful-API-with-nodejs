@@ -1,7 +1,29 @@
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
+var bcrypt = require('bcryptjs');     
 const User = require('../../models/user');
+
+// create an user
+router.post('/users/add', async (req, res) => {
+   bcrypt.hash(req.body.password, 10, (err, hash)=> {
+    if (err) throw err
+    else {
+       req.body.password = hash
+       try {
+        const createUser = new User(req.body);
+        createUser.save().then((data) => {
+          data: data
+        })
+        res.send(createUser)
+      } catch (error) {
+        res.status(400).json({
+          message: error
+        });
+      };
+    };
+  });
+});
 
 // Find user by name
 router.get('/users/:name', async (req, res) => {
@@ -17,21 +39,6 @@ router.get('/users/:name', async (req, res) => {
   }
   res.send(users);
 
-});
-
-// create an user
-router.post('/users/add', async (req, res) => {
-  try {
-    const createUser = new User(req.body);
-    createUser.save().then((data) => {
-      data: data
-    })
-    res.send(createUser)
-  } catch (error) {
-    res.status(400).json({
-      message: error
-    })
-  }
 });
 
 //edit an user
