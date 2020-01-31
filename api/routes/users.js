@@ -1,77 +1,18 @@
-const express = require('express');
-const router = express.Router();
-const mongoose = require('mongoose');
-var bcrypt = require('bcryptjs');     
-const User = require('../../models/user');
+const express = require("express");
+const router = new express.Router();
+const mongoose = require("mongoose");
+var bcrypt = require("bcryptjs");
+const User = require("../../models/user");
 
+
+const userController = require('../../controller/userController')
 // create an user
-router.post('/users/add', async (req, res) => {
-   bcrypt.hash(req.body.password, 10, (err, hash)=> {
-    if (err) throw err
-    else {
-       req.body.password = hash
-       try {
-        const createUser = new User(req.body);
-        createUser.save().then((data) => {
-          data: data
-        })
-        res.send(createUser)
-      } catch (error) {
-        res.status(400).json({
-          message: error
-        });
-      };
-    };
-  });
-});
-
+router.post("/users/add", userController.adduser)
 // Find user by name
-router.get('/users/:name', async (req, res) => {
-  try {
-    const users = await User.findOne({ 'name': req.params.name })
-    if (!users) {
-      return res.status(404).json({
-        message: "user not found"
-      });
-    }
-  } catch (error) {
-    res.status(500).send(error)
-  }
-  res.send(users);
-
-});
-
+router.get("/users/:name", userController.getalluserbyname)
 //edit an user
-router.patch('/users/:name', async (req, res) => {
-  try {
-    const user = await User.findOneAndUpdate({ 'name': req.params.name }, req.body, { new: true, runValidators: true });
-    if (!user) {
-      res.status(404).json({
-        message: "user not found"
-      });
-    }
-  } catch (error) {
-    res.status(500).json({
-      message: error
-    });
-  }
-  res.send(user);
-})
-
+router.patch("/users/:name", userController.edituserbyname)
 //delete an user
-router.delete('/users/:name', async (req, res) => {
-  const name = req.params.name;
-  try {
-    const user = await User.findOneAndRemove({ 'name': name }, req.body)
-    if (!user) {
-      res.status(404).json({
-        message: "user not found"
-      })
-    }
-  } catch (error) {
-    res.send(error);
-  }
-  res.send(user);
-})
+router.delete("/users/:name", userController.deleteuserbyname)
 
 module.exports = router;
