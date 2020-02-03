@@ -3,7 +3,6 @@ const friendUser = require('../models/friend');
 
 const mongoose = require('mongoose')
 
-
 exports.addnewfriend =  async (req, res) => {
   const userId = req.body.userId;
   const friendId = req.params.id;
@@ -23,8 +22,8 @@ exports.addnewfriend =  async (req, res) => {
         data: data
       });
     });
-  } catch (error) {
-    res.status(400).send(error)
+  } catch (e) {
+    res.status(400).send(e)
   }
 };
 
@@ -38,8 +37,8 @@ exports.countFriend = async (req, res) => {
       data: data.map(user => user.name),
       friends_count: allFriends.length
     });
-  } catch (error) {
-    res.status(400).send(error);
+  } catch (e) {
+    res.status(400).send(e);
   }
 };
 

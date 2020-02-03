@@ -3,6 +3,8 @@ const app = express();
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const dotenv = require('dotenv')
+// require('dotenv').config()
 
 const userRoutes = require('./api/routes/users');
 const friendRoutes = require('./api/routes/friends');
