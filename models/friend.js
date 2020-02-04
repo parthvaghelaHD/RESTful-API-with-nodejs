@@ -8,6 +8,8 @@ const userFriend = new mongoose.Schema({
  friendId : {
    type : String
  }
+}, {
+  timestamps : true
 });
 
 userFriend.plugin(uniqueValidator);
