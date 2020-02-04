@@ -11,7 +11,7 @@ const { verifyToken } = require('../../middelware/middelware')
 const userController = require("../../controller/userController");
 
 // create an user
-router.post("/users/", userController.adduser);
+router.post("/users", userController.adduser);
 // Find user by name
 router.get("/users/", userController.getuserbyname);
 //edit an user
@@ -21,6 +21,6 @@ router.delete("/users/:name", userController.deleteuserbyname);
 //login create a jwt token
 router.post("/users/login", userController.login);  
 //verify token which is created by login user
-router.post('/users/verify', verifyToken, userController.adduser);
+router.get('/users/getuser', userController.getUser)
 
 module.exports = router;

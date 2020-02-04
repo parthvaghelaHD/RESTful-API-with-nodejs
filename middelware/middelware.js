@@ -4,19 +4,20 @@ require("dotenv").config();
 function verifyToken(req, res, next) {
   const bearerHeader = req.headers["authorization"];
   if (typeof bearerHeader !== "undefined") {
-    jwt.verify(bearerHeader, process.env.SECRET_KEY, (err, authData) => {
+
+    jwt.verify(bearerHeader, process.env.SECRET_KEY, function(err, decoded)  {
       if (err) {
-        res.status(403).json({
-          message: err
+        return res.status(500).json({
+          message: "invalid verification token"
         });
       } else {
-        res.status(200).json({
-          message: "Token verified",
-          auth: authData
+        return res.status(200).json({
+          message: "verification token",
+          decoded
         });
+        next();
       }
     });
-    next();
   } else {
     return res.status(500).json({
       message: "invalid verification token"
