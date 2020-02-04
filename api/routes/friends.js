@@ -8,7 +8,7 @@ const friendUser = require('../../models/friend');
 const friendsController = require('../../controller/friendsController');
 
 //add as friend via id
-router.post('/friends/:id', friendsController.addnewfriend);
+router.post('/friends/:id', friendsController.addnewFriend);
 //get friends via id
 router.get('/friends/:id', friendsController.countFriend);
 //delete friend via id

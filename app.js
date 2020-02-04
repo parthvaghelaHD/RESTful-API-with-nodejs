@@ -33,5 +33,6 @@ app.use(bodyParser.json());
 // routes which should handle Request
 app.use(userRoutes);
 app.use(friendRoutes);
+
 // Exports a whole app
 module.exports = app;

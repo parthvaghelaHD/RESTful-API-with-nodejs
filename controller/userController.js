@@ -3,39 +3,35 @@ const friendUser = require("../models/friend");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const mongoose = require("mongoose");
-require('dotenv').config()
+require("dotenv").config();
 
-exports.adduser = async (req, res) => {
-    let createUser;
-    try {
-      createUser = new User(req.body);
-      createUser.save();
-    } catch (err) {
-      res.status(400).json({
-      message : err  
-    })
+async function adduser(req, res) {
+  let createUser;
+  try {
+    createUser = new User(req.body);
+    createUser.save();
+  } catch (err) {
+    res.status(400).json({
+      message: err
+    });
     res.send(createUser);
-  };
+  }
 }
 
-exports.login = (req, res) => {
-  const email = req.body.email;
-  const obj = {
-    email
-  };
+async function login(req, res) {
   try {
-    const token = jwt.sign({ obj }, process.env.SECRET_KEY);
+    const token = await jwt.sign(req.body.email, process.env.SECRET_KEY);
     res.send({ token });
   } catch (error) {
     res.status(500).json({
       message: error
     });
   }
-};
+}
 
-exports.getalluserbyname = async (req, res) => {
+async function getuserbyname(req, res) {
   try {
-    const users = await User.findOne({ name: req.params.name });
+    const users = await User.findOne({ name: req.query.name });
     if (!users) {
       return res.status(404).json({
         message: "user not found from get"
@@ -45,9 +41,9 @@ exports.getalluserbyname = async (req, res) => {
   } catch (error) {
     res.status(500).send(error);
   }
-};
+}
 
-exports.deleteuserbyname = async (req, res) => {
+async function deleteuserbyname(req, res) {
   const name = req.params.name;
   try {
     const user = await User.findOneAndRemove({ name: name }, req.body);
@@ -60,17 +56,17 @@ exports.deleteuserbyname = async (req, res) => {
     res.send(error);
   }
   res.send(user);
-};
+}
 
-exports.edituserbyname = async (req, res) => {
+async function edituserbyname(req, res) {
   const updates = Object.keys(req.body);
   const allowUpdate = ["name", "email", "password", "mobile"];
-  const isValidOperations = updates.every(update => allowUpdate.includes(update));
-
+  const isValidOperations = updates.every(update =>
+    allowUpdate.includes(update)
+  );
   if (!isValidOperations) {
     return res.status(400).send({ error: "Invalid Operations " });
   }
-
   try {
     const user = await User.findOneAndUpdate(
       { name: req.params.name },
@@ -88,4 +84,12 @@ exports.edituserbyname = async (req, res) => {
       message: error
     });
   }
+}
+
+module.exports = {
+  adduser,
+  login,
+  getuserbyname,
+  deleteuserbyname,
+  edituserbyname
 };

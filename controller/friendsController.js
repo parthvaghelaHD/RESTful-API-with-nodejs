@@ -3,7 +3,7 @@ const friendUser = require('../models/friend');
 
 const mongoose = require('mongoose')
 
-exports.addnewfriend =  async (req, res) => {
+async function addnewFriend(req, res) {
   const userId = req.body.userId;
   const friendId = req.params.id;
   const friendObject = {
@@ -27,7 +27,7 @@ exports.addnewfriend =  async (req, res) => {
   }
 };
 
-exports.countFriend = async (req, res) => {
+async function countFriend(req, res) {
   const userId = req.params.id;
   try {
     const allFriends = await friendUser.find({ userId: userId });
@@ -42,7 +42,7 @@ exports.countFriend = async (req, res) => {
   }
 };
 
-exports.deleteFriend = async (req, res) => {
+async function deleteFriend(req, res) {
   const userId = req.params.friendId;
   try {
     const allFriends = await friendUser.deleteOne({ friendId: userId }).exec();
@@ -55,3 +55,4 @@ exports.deleteFriend = async (req, res) => {
   }
 };
 
+module.exports = { addnewFriend, countFriend, deleteFriend}
